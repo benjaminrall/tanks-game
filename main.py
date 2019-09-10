@@ -22,7 +22,7 @@ blue = (0,0,255)
 white = (255,255,255)
 black = (0,0,0)
 
-levels = [json.load(open("maps\level1","r"))]
+levels = [json.load(open("levels\level_1","r"))]
 
 tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.png"),
          pygame.image.load("tiles\cross_junction.png"),pygame.image.load("tiles\dirt_border_square_bottom_left.png"),
@@ -54,22 +54,24 @@ def get_centered_pos(pos, tank):
     pos = (pos[0]- tank.pos[0]+(win_width/2),pos[1] - tank.pos[1]+(win_height/2))
     return (int(pos[0]),int(pos[1]))
 
-obstacles = []
-obstacles_pa = pygame.PixelArray(obstacles_map)
-for col in range(len(obstacles_pa)):
-    for row in range(len(obstacles_pa)):
-        if obstacles_pa[row,col] == obstacles_map.map_rgb((0,0,0)):
-            obstacles.append([obstacles_data[0], ((row+1)*64,(col+1)*64)])
+obstacle_maps = [json.load(open("levels\obstacle_map_1","r"))]
 
-random.shuffle(levels)
+index = random.randint(1,len(levels)) - 1
+
 tiles_indexes = []
-
-level = levels[0]
+level = levels[index]
+obstacle_map = obstacle_maps[index]
 for col in range(len(level)):
     tiles_indexes.append([])
     tiles_i = tiles_indexes[col]
     for row in range(len(level)):
         tiles_i.append(level[row][col])
+        
+obstacles = []
+for col in range(len(obstacle_map)):
+    for row in range(len(obstacle_map)):
+        if obstacle_map[row][col] != 0 and obstacle_map[row][col] != 1 and obstacle_map[row][col] != 2:
+            obstacles.append([obstacles_data[obstacle_map[row][col]-3],(col*64,row*64)])
 
 bg_img = pygame.Surface((1600,1600),pygame.SRCALPHA)
 for col in range(len(tiles_indexes)):
@@ -183,7 +185,7 @@ while run:
                     if player.pos[0] <= 19:
                         player.pos = (20, player.pos[1])
                     if player.pos[0] >= 1581:
-                        player.pos[0] = (1580, player.pos[1])
+                        player.pos = (1580, player.pos[1])
                     if player.pos[1] <= 19:
                         player.pos = (player.pos[0],20)
                     if player.pos[1] >= 1581:
