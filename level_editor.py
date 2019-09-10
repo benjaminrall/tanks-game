@@ -118,7 +118,7 @@ for x in range(25):
     for y in range(25):
         block_grid[x].append(Block((x*21,y*21)))
 
-display = pygame.display.set_mode((800,800))
+display = pygame.display.set_mode((524,524))
 pygame.display.set_caption("Level Editor")
 mouse_index = 1
 display.fill((255,255,255))
@@ -130,6 +130,8 @@ while True:
             block_grid[i][j].print_block(display,images[block_grid[i][j].image_index][1])
 
     for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            break
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_down = True
         if event.type == pygame.MOUSEBUTTONUP:
@@ -166,3 +168,5 @@ while True:
     pygame.display.set_icon(images[mouse_index][1])
     pygame.display.update()
     clock.tick(60)
+pygame.quit()
+quit()
