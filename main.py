@@ -24,13 +24,11 @@ black = (0,0,0)
 
 levels = [json.load(open("maps\level1","r"))]
 
-tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\dirt_2.png"),pygame.image.load("tiles\grass_1.png"),
-         pygame.image.load("tiles\grass_2.png"),pygame.image.load("tiles\cross_junction.png"),pygame.image.load("tiles\dirt_border_square_bottom_left.png"),
+tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.png"),
+         pygame.image.load("tiles\cross_junction.png"),pygame.image.load("tiles\dirt_border_square_bottom_left.png"),
          pygame.image.load("tiles\dirt_border_square_bottom_right.png"),pygame.image.load("tiles\dirt_border_circle_bottom_left.png"),
-         pygame.image.load("tiles\dirt_border_circle_bottom_right.png"),pygame.image.load("tiles\dirt_border_circle_down.png"),
-         pygame.image.load("tiles\dirt_border_circle_left.png"),pygame.image.load("tiles\dirt_border_circle_right.png"),
-         pygame.image.load("tiles\dirt_border_circle_top_left.png"),pygame.image.load("tiles\dirt_border_circle_top_right.png"),
-         pygame.image.load("tiles\dirt_border_circle_up.png"),pygame.image.load("tiles\dirt_border_square_down.png"),
+         pygame.image.load("tiles\dirt_border_circle_bottom_right.png"),pygame.image.load("tiles\dirt_border_circle_top_left.png"),
+         pygame.image.load("tiles\dirt_border_circle_top_right.png"),pygame.image.load("tiles\dirt_border_square_down.png"),
          pygame.image.load("tiles\dirt_border_square_left.png"),pygame.image.load("tiles\dirt_border_square_right.png"),
          pygame.image.load("tiles\dirt_border_square_up.png"),pygame.image.load("tiles\dirt_border_square_top_left.png"),
          pygame.image.load("tiles\dirt_border_square_top_right.png"),pygame.image.load("tiles\grass_border_square_bottom_left.png"),
