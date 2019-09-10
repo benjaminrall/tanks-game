@@ -2,7 +2,7 @@ import socket, time, random, pygame, math
 pygame.init()
 
 IMAGES = [pygame.image.load("imgs\\turret.png"),pygame.image.load("imgs\\bullet.png"),
-          pygame.image.load("imgs\gun.png"),pygame.image.load("obstacles\\boulder1.png"),
+          pygame.image.load("imgs\gun.png"),pygame.image.load("obstacles\\boulder_1.png"),
           ]
 
 class Tank():
