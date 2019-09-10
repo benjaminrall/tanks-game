@@ -131,7 +131,8 @@ while True:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            break
+            pygame.quit()
+            quit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_down = True
         if event.type == pygame.MOUSEBUTTONUP:
@@ -168,5 +169,3 @@ while True:
     pygame.display.set_icon(images[mouse_index][1])
     pygame.display.update()
     clock.tick(60)
-pygame.quit()
-quit()
