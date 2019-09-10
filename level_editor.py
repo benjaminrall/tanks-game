@@ -2,7 +2,7 @@ import pygame, os, time, random, json
 
 class Block():
 
-    def __init__(self,pos,image_index = 0):
+    def __init__(self,pos,image_index = 1):
         self.pos = pos
         self.image_index = image_index
 
@@ -132,10 +132,9 @@ for x in range(25):
 display = pygame.display.set_mode((800,800))
 pygame.display.set_caption("Level Editor")
 mouse_index = 1
-print("1")
 display.fill((255,255,255))
+mouse_down = False
 while True:
-    print("2")
     display.fill((255,255,255))
     for i in range(25):
         for j in range(25):
@@ -143,10 +142,9 @@ while True:
 
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = pygame.mouse.get_pos()
-            for x in range(25):
-                for y in range(25):
-                    block_grid[x][y].check_clicked(mouse_pos,mouse_index)
+            mouse_down = True
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_down = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 mouse_index += 1
@@ -156,7 +154,11 @@ while True:
                 mouse_index = 51
             if mouse_index > 51:
                 mouse_index = 0
-
+    if mouse_down:
+        mouse_pos = pygame.mouse.get_pos()
+        for x in range(25):
+            for y in range(25):
+                block_grid[x][y].check_clicked(mouse_pos,mouse_index)
     grid = []
     for d in range(25):
         grid.append([])
@@ -172,5 +174,6 @@ while True:
     with open("level_save","w") as f:
         json.dump(data,f)
     pygame.display.set_caption(images[mouse_index][2])
+    pygame.display.set_icon(images[mouse_index][1])
     pygame.display.update()
     clock.tick(60)
