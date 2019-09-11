@@ -25,7 +25,7 @@ spawnpoint_map = spawnpoint_maps[index]
 for col in range(len(spawnpoint_map)):
     for row in range(len(spawnpoint_map)):
         if spawnpoint_map[row][col] == 1:
-            startingpos.append((col*64,row*64))
+            startingpos.append((row*64,col*64))
 
 def threaded_client(conn, p):
     global idCount, tanks, index

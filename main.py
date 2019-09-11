@@ -76,7 +76,7 @@ obstacles = []
 for col in range(len(obstacle_map)):
     for row in range(len(obstacle_map)):
         if obstacle_map[row][col] != 0 and obstacle_map[row][col] != 1 and obstacle_map[row][col] != 2:
-            obstacles.append([(col*64,row*64),obstacle_map[row][col],obstacles_data[obstacle_map[row][col]-3]])
+            obstacles.append([(row*64,col*64),obstacle_map[row][col],obstacles_data[obstacle_map[row][col]-3]])
 
 bg_img = pygame.Surface((1600,1600),pygame.SRCALPHA)
 for col in range(len(tiles_indexes)):
