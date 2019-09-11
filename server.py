@@ -15,17 +15,23 @@ except socket.error as e:
 s.listen()
 print("Waiting for a connection...")
 
-spawnpoint_maps = [json.load(open("maps\obstacle_map_1","r")),json.load(open("maps\obstacle_map_2","r"))]
+spawnpoint_maps = [json.load(open("maps\obstacle_map_1","r"))]
 connected = set()
 startingpos = []
+powerups = []
 tanks = []
 idCount = 0
 index = random.randint(1,len(spawnpoint_maps)) - 1
-spawnpoint_map = spawnpoint_maps[index]
-for col in range(len(spawnpoint_map)):
-    for row in range(len(spawnpoint_map)):
-        if spawnpoint_map[row][col] == 1:
+tank_map = spawnpoint_maps[index]
+powerup_map = spawnpoint_maps[index]
+for col in range(len(tank_map)):
+    for row in range(len(tank_map)):
+        if tank_map[row][col] == 1:
             startingpos.append((row*64 + 32,col*64 + 32))
+for col in range(len(powerup_map)):
+    for row in range(len(powerup_map)):
+        if powerup_map[row][col] == 2:
+            powerup_spawns.append([(row*64 + 22,col*64 + 22), 0])
 
 def get_index(tanks, ID):
     for i in range(len(tanks)):
@@ -44,7 +50,9 @@ def threaded_client(conn, p_ID):
             if not data:
                 break
             else:
-                if data != "get":
+                if data == "powerup":
+                    reply = powerups
+                elif data != "get":
                     if len(tanks) != tanks_len:
                         p_i = get_index(tanks, p_ID)
                     tanks_len = len(tanks)
@@ -59,7 +67,6 @@ def threaded_client(conn, p_ID):
                     reply = tanks
                 else:
                     reply = (tanks, index)
-                print(reply)
                 conn.sendall(pickle.dumps(reply))
         except:
             break
