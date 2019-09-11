@@ -12,8 +12,6 @@ yv = 0
 display = pygame.display.set_mode((win_width,win_height))
 pygame.display.set_caption("Tank Game")
 border = pygame.image.load("imgs\\border.png")
-tiles_map = pygame.image.load("maps\\tiles_map.png")
-obstacles_map = pygame.image.load("maps\obstacles_map.png")
 clock = pygame.time.Clock()
 players = []
 green = (0,255,0)
@@ -21,8 +19,13 @@ red = (255,0,0)
 blue = (0,0,255)
 white = (255,255,255)
 black = (0,0,0)
+n = Network()
+player_ID = int(n.getP())
+data = n.send("get")
+players, index = data[0], data[1]
+print("You are player",player_ID)
 
-levels = [json.load(open("levels\level_1","r"))]
+levels = [json.load(open("maps\level_1","r"))]
 
 tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.png"),
          pygame.image.load("tiles\cross_junction.png"),pygame.image.load("tiles\dirt_border_square_bottom_left.png"),
@@ -47,16 +50,15 @@ tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.
          pygame.image.load("tiles\\road_turn_square_top_right.png"),pygame.image.load("tiles\\road_vertical.png"),
          pygame.image.load("tiles\\t_junction_down.png"),pygame.image.load("tiles\\t_junction_left.png"),
          pygame.image.load("tiles\\t_junction_right.png"),pygame.image.load("tiles\\t_junction_up.png")]
-obstacles_data = [[3, True],[4,True]]
+obstacles_data = [True,True]
 
 
 def get_centered_pos(pos, tank):
     pos = (pos[0]- tank.pos[0]+(win_width/2),pos[1] - tank.pos[1]+(win_height/2))
     return (int(pos[0]),int(pos[1]))
 
-obstacle_maps = [json.load(open("levels\obstacle_map_1","r"))]
+obstacle_maps = [json.load(open("maps\obstacle_map_1","r"))]
 
-index = random.randint(1,len(levels)) - 1
 
 tiles_indexes = []
 level = levels[index]
@@ -71,7 +73,7 @@ obstacles = []
 for col in range(len(obstacle_map)):
     for row in range(len(obstacle_map)):
         if obstacle_map[row][col] != 0 and obstacle_map[row][col] != 1 and obstacle_map[row][col] != 2:
-            obstacles.append([obstacles_data[obstacle_map[row][col]-3],(col*64,row*64)])
+            obstacles.append([(col*64,row*64),obstacle_map[row][col],obstacles_data[obstacle_map[row][col]-3]])
 
 bg_img = pygame.Surface((1600,1600),pygame.SRCALPHA)
 for col in range(len(tiles_indexes)):
@@ -80,14 +82,10 @@ for col in range(len(tiles_indexes)):
 
 barriers = [Barrier((-100,-100),2,False)]
 for obstacle in obstacles:
-    barriers.append(Barrier(obstacle[1],obstacle[0][0],obstacle[0][1]))
+    barriers.append(Barrier(obstacle[0],obstacle[1],obstacle[2]))
 
 slip = 0.5
 frames = 0
-n = Network()
-player_ID = int(n.getP())
-players = n.send("get")
-print("You are player",player_ID)
 
 run = True
 while run:
