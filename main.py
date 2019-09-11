@@ -24,8 +24,10 @@ player_ID = int(n.getP())
 player_index = player_ID
 data = n.send("get")
 players, index = data[0], data[1]
+active_powerups = []
 print("You are player",player_ID)
 max_speed = 4
+
 levels = [json.load(open("maps\level_1","r")),json.load(open("maps\level_2","r"))]
 
 tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.png"),
@@ -107,6 +109,15 @@ while run:
     display.blit(border,get_centered_pos((-400,-400),players[player_index]))
     display.blit(bg_img,get_centered_pos((0,0),players[player_index]))
     players = n.send(players[player_index])
+    powerups = n.send("powerup")
+    for powerup in powerups:
+        if powerup[1] != 0:
+            valid = True
+            for active_powerup in active_powerups:
+                if powerup[0] == active_powerup.pos:
+                    valid = False
+            if valid:
+                active_powerups.append(Powerup(powerup[0],powerup[1]))
     players_len = len(players)
     for player in players:
         if player.ID == player_ID:
@@ -117,6 +128,8 @@ while run:
                         break
                     except:
                         player_index = get_index(players, player_ID)
+            for powerup in active_powerups:
+                powerup.display_powerup(display, players[player_index])
         for projectile in player.projectiles:
             projectile.print_projectile(display, players[player_index])
         player.display_tank(display, players[player_index])
@@ -219,11 +232,20 @@ while run:
                 player.yv = 0
                 player.xa = 0
                 player.ya = 0
+            elif collision == 4:
+                if collision_pos == 1:
+                    player.health = 100
+                
 
             for i in range(len(player.projectiles)):
                 collision = player.projectiles[i].check_collision(players, barriers)
                 if collision:
                     del player.projectiles[i]
+                    break
+            for i in range(len(active_powerups)):
+                collision = active_powerups[i].check_collision(players)
+                if collision:
+                    del active_powerups[i]
                     break
             for projectile in player.projectiles:
                 projectile.pos = (projectile.pos[0] + projectile.velocity[0], projectile.pos[1] + projectile.velocity[1])
