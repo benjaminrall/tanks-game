@@ -25,7 +25,7 @@ player_index = player_ID
 data = n.send("get")
 players, index = data[0], data[1]
 print("You are player",player_ID)
-
+max_speed = 4
 levels = [json.load(open("maps\level_1","r")),json.load(open("maps\level_2","r"))]
 
 tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.png"),
@@ -91,11 +91,16 @@ for obstacle in obstacles:
 slip = 0.5
 frames = 0
 
+def get_index(tanks, ID):
+    for i in range(len(tanks)):
+        if tanks[i].ID == ID:
+            return i
+
 run = True
 players_len = 0
 last_shot = time.time()
 mouse_down = False
-
+previous_pos = 0
 while run:
     if len(players) != players_len:
         player_index = get_index(players, player_ID)
@@ -150,14 +155,14 @@ while run:
             player.direction = player.get_angle()
             player.xv += player.xa
             player.yv += player.ya
-            if player.xv > 5 and player.xa == slip:
-                player.xv = 5
-            if player.yv > 5 and player.ya == slip:
-                player.yv = 5
-            if player.xv < -5 and player.xa == slip * -1:
-                player.xv = -5
-            if player.yv < -5 and player.ya == slip * -1:
-                player.yv = -5
+            if player.xv > max_speed and player.xa == slip:
+                player.xv = max_speed
+            if player.yv > max_speed and player.ya == slip:
+                player.yv = max_speed
+            if player.xv < max_speed * -1 and player.xa == slip * -1:
+                player.xv = max_speed * -1
+            if player.yv < max_speed * -1 and player.ya == slip * -1:
+                player.yv = max_speed * -1
             if player.xv > 0 and player.xa == 0:
                 player.xv -= slip
             if player.yv > 0 and player.ya == 0:
@@ -175,6 +180,23 @@ while run:
                     player.projectiles.append(Projectile(player.ID,(player.pos[0],player.pos[1]),7,frames,display))
                     last_shot = time.time()
 
+            
+            if player.pos[0] >= 20 and player.pos[0] <= 1580 and player.pos[1] >= 20 and player.pos[1] <= 1580:
+                player.pos = (int(player.pos[0] + (player.xv)),int(player.pos[1] + (player.yv)))
+            else:
+                player.xv = 0
+                player.yv = 0
+                player.xa = 0
+                player.ya = 0
+                if player.pos[0] <= 19:
+                    player.pos = (20, player.pos[1])
+                if player.pos[0] >= 1581:
+                    player.pos = (1580, player.pos[1])
+                if player.pos[1] <= 19:
+                    player.pos = (player.pos[0],20)
+                if player.pos[1] >= 1581:
+                    player.pos = (player.pos[0],1580)
+
             collision, collision_pos  = player.check_collision(players, barriers)
             if collision == 1:
                 if player.spawn_time + 5 < time.time():
@@ -184,7 +206,7 @@ while run:
             elif collision == 2:
                 if player.spawn_time + 5 < time.time():
                     player.health -= 30
-                player.pos = (int(player.pos[0] - (player.xv*1.5)),int(player.pos[1] - (player.yv*1.5)))
+                player.pos = previous_pos
                 player.xv = 0
                 player.yv = 0                
                 player.xa = 0
@@ -192,27 +214,12 @@ while run:
                 if player.health <= 0:
                     player.dead = True
             elif collision == 3:
-                player.pos = (int(player.pos[0] - (player.xv*1.5)),int(player.pos[1] - (player.yv*1.5)))
+                player.pos = previous_pos
                 player.xv = 0
                 player.yv = 0
                 player.xa = 0
                 player.ya = 0
-            if collision == 0 or collision == 1:
-                if player.pos[0] >= 20 and player.pos[0] <= 1580 and player.pos[1] >= 20 and player.pos[1] <= 1580:
-                    player.pos = (int(player.pos[0] + (player.xv)),int(player.pos[1] + (player.yv)))
-                else:
-                    player.xv = 0
-                    player.yv = 0
-                    player.xa = 0
-                    player.ya = 0
-                    if player.pos[0] <= 19:
-                        player.pos = (20, player.pos[1])
-                    if player.pos[0] >= 1581:
-                        player.pos = (1580, player.pos[1])
-                    if player.pos[1] <= 19:
-                        player.pos = (player.pos[0],20)
-                    if player.pos[1] >= 1581:
-                        player.pos = (player.pos[0],1580)
+
             for i in range(len(player.projectiles)):
                 collision = player.projectiles[i].check_collision(players, barriers)
                 if collision:
@@ -220,7 +227,8 @@ while run:
                     break
             for projectile in player.projectiles:
                 projectile.pos = (projectile.pos[0] + projectile.velocity[0], projectile.pos[1] + projectile.velocity[1])
-    
+
+            previous_pos = player.pos
     pygame.display.update()
     frames += 1
     clock.tick(60)
