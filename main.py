@@ -90,18 +90,32 @@ for obstacle in obstacles:
 slip = 0.5
 frames = 0
 
+def get_index(tanks, ID):
+    for i in range(len(tanks)):
+        if tanks[i].ID == ID:
+            return i
+
+players_len = 0
 run = True
 while run:
-    display.blit(border,get_centered_pos((-400,-400),players[player_ID]))
-    display.blit(bg_img,get_centered_pos((0,0),players[player_ID]))
-    players = n.send(players[player_ID])
+    if len(players) != players_len:
+        player_index = get_index(players, player_ID)
+    display.blit(border,get_centered_pos((-400,-400),players[player_index]))
+    display.blit(bg_img,get_centered_pos((0,0),players[player_index]))
+    players = n.send(players[player_index])
+    players_len = len(players)
     for player in players:
         if player.ID == player_ID:
             for barrier in barriers:
-                barrier.display_barrier(display, players[player_ID])
+                while True:
+                    try:
+                        barrier.display_barrier(display, players[player_index])
+                        break
+                    except:
+                        player_index = get_index(players, player_ID)
         for projectile in player.projectiles:
-            projectile.print_projectile(display, players[player_ID])
-        player.display_tank(display, players[player_ID])
+            projectile.print_projectile(display, players[player_index])
+        player.display_tank(display, players[player_index])
         if player.ID == player_ID:
   
             for event in pygame.event.get():
