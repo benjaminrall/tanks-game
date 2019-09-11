@@ -25,11 +25,18 @@ spawnpoint_map = spawnpoint_maps[index]
 for col in range(len(spawnpoint_map)):
     for row in range(len(spawnpoint_map)):
         if spawnpoint_map[row][col] == 1:
-            startingpos.append((row*64,col*64))
+            startingpos.append((row*64 + 32,col*64 + 32))
 
-def threaded_client(conn, p):
+def get_index(tanks, ID):
+    for i in range(len(tanks)):
+        if tanks[i].ID == ID:
+            return i
+
+def threaded_client(conn, p_ID):
     global idCount, tanks, index
-    conn.send(str.encode(str(p)))
+    conn.send(str.encode(str(p_ID)))
+    p_i = get_index(tanks, p_ID)
+    tanks_len = len(tanks)
     reply = ""
     while True:
         try:
@@ -38,7 +45,10 @@ def threaded_client(conn, p):
                 break
             else:
                 if data != "get":
-                    tanks[p] = data
+                    if len(tanks) != tanks_len:
+                        p_i = get_index(tanks, p_ID)
+                    tanks_len = len(tanks)
+                    tanks[p_i] = data
                     for i in range(len(tanks)):
                         if tanks[i].dead:
                             random.shuffle(startingpos)
@@ -49,27 +59,30 @@ def threaded_client(conn, p):
                     reply = tanks
                 else:
                     reply = (tanks, index)
+                print(reply)
                 conn.sendall(pickle.dumps(reply))
         except:
             break
     try:
-        tanks[p].quit = True
-        for i in range(len(tanks[p].projectiles)):
-            del tanks[p].projectiles[0]
-        print((p + 1),"left")
+        tanks[p_i].quit = True
+        for i in range(len(tanks[p_i].projectiles)):
+            del tanks[p_i].projectiles[0]
+        del tanks[p_i]
+        print("player",p_ID,"left")
     except:
         pass
     idCount -=1
     print("Lost connection")
     conn.close()
 
-p = -1
+p_ID = -1
 print("new game")
 while True:
     if len(tanks) < len(startingpos):
-        p += 1
+        p_ID += 1
         conn, addr = s.accept()
         print("Connected to:",addr)
-        tanks.append(Tank(p,startingpos[p]))
+        random.shuffle(startingpos)
+        tanks.append(Tank(p_ID,startingpos[0]))
         idCount += 1
-        start_new_thread(threaded_client, (conn, p))
+        start_new_thread(threaded_client, (conn, p_ID))
