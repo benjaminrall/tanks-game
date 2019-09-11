@@ -96,8 +96,9 @@ while run:
     display.blit(bg_img,get_centered_pos((0,0),players[player_ID]))
     players = n.send(players[player_ID])
     for player in players:
-        for barrier in barriers:
-            barrier.display_barrier(display, players[player_ID])
+        if player.ID == player_ID:
+            for barrier in barriers:
+                barrier.display_barrier(display, players[player_ID])
         for projectile in player.projectiles:
             projectile.print_projectile(display, players[player_ID])
         player.display_tank(display, players[player_ID])
