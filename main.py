@@ -50,7 +50,10 @@ tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.
          pygame.image.load("tiles\\road_turn_square_top_right.png"),pygame.image.load("tiles\\road_vertical.png"),
          pygame.image.load("tiles\\t_junction_down.png"),pygame.image.load("tiles\\t_junction_left.png"),
          pygame.image.load("tiles\\t_junction_right.png"),pygame.image.load("tiles\\t_junction_up.png")]
-obstacles_data = [True,True]
+obstacles_data = [True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,False,False,False,False,
+                  False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,
+                  False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,
+                  False,False,False]
 
 
 def get_centered_pos(pos, tank):
