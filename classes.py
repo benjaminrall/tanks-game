@@ -33,7 +33,7 @@ IMAGES = [pygame.image.load("imgs\\turret.png"),pygame.image.load("imgs\\bullet.
           pygame.image.load("obstacles\water_open_bottom_right.png"),pygame.image.load("obstacles\water_open_bottom_left.png")
           ]
 
-POWERUP_IMGS = [pygame.image.load("powerups\medkit.png")]
+POWERUP_IMGS = [pygame.image.load("imgs\medkit.png")]
 
 
 class Tank():
