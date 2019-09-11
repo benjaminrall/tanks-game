@@ -91,13 +91,11 @@ for obstacle in obstacles:
 slip = 0.5
 frames = 0
 
-def get_index(tanks, ID):
-    for i in range(len(tanks)):
-        if tanks[i].ID == ID:
-            return i
-
-players_len = 0
 run = True
+players_len = 0
+last_shot = time.time()
+mouse_down = False
+
 while run:
     if len(players) != players_len:
         player_index = get_index(players, player_ID)
@@ -125,7 +123,10 @@ while run:
                     quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        player.projectiles.append(Projectile(player.ID,(player.pos[0],player.pos[1]),7,frames,display))
+                        mouse_down = True
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        mouse_down = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         player.xa = slip * -1
@@ -169,16 +170,21 @@ while run:
                 if player.projectiles[0].start_time + 120 <= frames:
                     del player.projectiles[0]
 
+            if mouse_down:
+                if last_shot + 0.2 < time.time():
+                    player.projectiles.append(Projectile(player.ID,(player.pos[0],player.pos[1]),7,frames,display))
+                    last_shot = time.time()
+
             collision, collision_pos  = player.check_collision(players, barriers)
             if collision == 1:
                 if player.spawn_time + 5 < time.time():
-                    player.health -= 20
+                    player.health -= 10
                 if player.health <= 0:
                     player.dead = True
             elif collision == 2:
                 if player.spawn_time + 5 < time.time():
-                    player.health -= 50
-                player.pos = (int(player.pos[0] - (player.xv)),int(player.pos[1] - (player.yv)))
+                    player.health -= 30
+                player.pos = (int(player.pos[0] - (player.xv*1.5)),int(player.pos[1] - (player.yv*1.5)))
                 player.xv = 0
                 player.yv = 0                
                 player.xa = 0
@@ -186,14 +192,14 @@ while run:
                 if player.health <= 0:
                     player.dead = True
             elif collision == 3:
-                player.pos = (int(player.pos[0] - (player.xv)),int(player.pos[1] - (player.yv)))
+                player.pos = (int(player.pos[0] - (player.xv*1.5)),int(player.pos[1] - (player.yv*1.5)))
                 player.xv = 0
                 player.yv = 0
                 player.xa = 0
                 player.ya = 0
             if collision == 0 or collision == 1:
                 if player.pos[0] >= 20 and player.pos[0] <= 1580 and player.pos[1] >= 20 and player.pos[1] <= 1580:
-                    player.pos = (int(player.pos[0] + player.xv),int(player.pos[1] + player.yv))
+                    player.pos = (int(player.pos[0] + (player.xv)),int(player.pos[1] + (player.yv)))
                 else:
                     player.xv = 0
                     player.yv = 0
