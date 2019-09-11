@@ -156,6 +156,7 @@ while True:
                 mouse_index = len(images) - 1
             if mouse_index > len(images) - 1:
                 mouse_index = 0
+            pygame.display.set_caption(images[mouse_index][2])
     if mouse_down:
         mouse_pos = pygame.mouse.get_pos()
         for x in range(25):
@@ -175,7 +176,6 @@ while True:
     
     with open("level_save","w") as f:
         json.dump(data,f)
-    pygame.display.set_caption(images[mouse_index][2])
     pygame.display.set_icon(images[mouse_index][1])
     pygame.display.update()
     clock.tick(60)

@@ -14,8 +14,43 @@ class Block():
             if mouse_pos[1] > self.pos[1] and mouse_pos[1] < self.pos[1] + 20:
                 self.image_index = mouse_index
 
+tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.png"),
+         pygame.image.load("tiles\cross_junction.png"),pygame.image.load("tiles\dirt_border_square_bottom_left.png"),
+         pygame.image.load("tiles\dirt_border_square_bottom_right.png"),pygame.image.load("tiles\dirt_border_circle_bottom_left.png"),
+         pygame.image.load("tiles\dirt_border_circle_bottom_right.png"),pygame.image.load("tiles\dirt_border_circle_top_left.png"),
+         pygame.image.load("tiles\dirt_border_circle_top_right.png"),pygame.image.load("tiles\dirt_border_square_down.png"),
+         pygame.image.load("tiles\dirt_border_square_left.png"),pygame.image.load("tiles\dirt_border_square_right.png"),
+         pygame.image.load("tiles\dirt_border_square_up.png"),pygame.image.load("tiles\dirt_border_square_top_left.png"),
+         pygame.image.load("tiles\dirt_border_square_top_right.png"),pygame.image.load("tiles\grass_border_square_bottom_left.png"),
+         pygame.image.load("tiles\grass_border_square_bottom_right.png"),pygame.image.load("tiles\grass_border_square_top_left.png"),
+         pygame.image.load("tiles\grass_border_square_top_right.png"),pygame.image.load("tiles\grass_box.png"),
+         pygame.image.load("tiles\l_junction_bottom_left.png"),pygame.image.load("tiles\l_junction_bottom_right.png"),
+         pygame.image.load("tiles\l_junction_top_left.png"),pygame.image.load("tiles\l_junction_top_right.png"),
+         pygame.image.load("tiles\\road_end_down.png"),pygame.image.load("tiles\\road_end_left.png"),
+         pygame.image.load("tiles\\road_end_right.png"),pygame.image.load("tiles\\road_end_up.png"),
+         pygame.image.load("tiles\\road_horizontal.png"),pygame.image.load("tiles\\road_to_dirt_down.png"),
+         pygame.image.load("tiles\\road_to_dirt_left.png"),pygame.image.load("tiles\\road_to_dirt_right.png"),
+         pygame.image.load("tiles\\road_to_dirt_up.png"),pygame.image.load("tiles\\road_turn_circle_bottom_left.png"),
+         pygame.image.load("tiles\\road_turn_circle_bottom_right.png"),pygame.image.load("tiles\\road_turn_circle_top_left.png"),
+         pygame.image.load("tiles\\road_turn_circle_top_right.png"),pygame.image.load("tiles\\road_turn_square_bottom_left.png"),
+         pygame.image.load("tiles\\road_turn_square_bottom_right.png"),pygame.image.load("tiles\\road_turn_square_top_left.png"),
+         pygame.image.load("tiles\\road_turn_square_top_right.png"),pygame.image.load("tiles\\road_vertical.png"),
+         pygame.image.load("tiles\\t_junction_down.png"),pygame.image.load("tiles\\t_junction_left.png"),
+         pygame.image.load("tiles\\t_junction_right.png"),pygame.image.load("tiles\\t_junction_up.png")]
+level_save = json.load(open("level_save","r"))
+tiles_indexes = []
+for col in range(len(level_save)):
+    tiles_indexes.append([])
+    tiles_i = tiles_indexes[col]
+    for row in range(len(level_save)):
+        tiles_i.append(level_save[row][col])
+        
+bg_img = pygame.Surface((524,524),pygame.SRCALPHA)
+for col in range(len(tiles_indexes)):
+    for row in range(len(tiles_indexes)):
+        bg_img.blit(pygame.transform.scale(tiles[tiles_indexes[col][row]],(20,20)),((row)*21,(col)*21))
+
 nothing = pygame.Surface((64,64),pygame.SRCALPHA)
-pygame.draw.rect(nothing,(100,100,100),(0,0,64,64))
 player_spawn = pygame.Surface((64,64),pygame.SRCALPHA)
 pygame.draw.rect(player_spawn,(0,255,0),(0,0,64,64))
 powerup_spawn = pygame.Surface((64,64),pygame.SRCALPHA)
@@ -167,7 +202,7 @@ mouse_index = 1
 display.fill((255,255,255))
 mouse_down = False
 while True:
-    display.fill((255,255,255))
+    display.blit(bg_img,(0,0))
     for i in range(25):
         for j in range(25):
             block_grid[i][j].print_block(display,images[block_grid[i][j].image_index][1])
@@ -181,6 +216,7 @@ while True:
         if event.type == pygame.MOUSEBUTTONUP:
             mouse_down = False
         if event.type == pygame.KEYDOWN:
+            
             if event.key == pygame.K_UP:
                 mouse_index += 1
             if event.key == pygame.K_DOWN:
@@ -189,6 +225,7 @@ while True:
                 mouse_index = len(images) - 1
             if mouse_index > len(images) - 1:
                 mouse_index = 0
+            pygame.display.set_caption(images[mouse_index][2])
     if mouse_down:
         mouse_pos = pygame.mouse.get_pos()
         for x in range(25):
@@ -208,7 +245,6 @@ while True:
     
     with open("obstacle_map_save","w") as f:
         json.dump(data,f)
-    pygame.display.set_caption(images[mouse_index][2])
     pygame.display.set_icon(images[mouse_index][1])
     pygame.display.update()
     clock.tick(60)
