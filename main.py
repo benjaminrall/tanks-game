@@ -21,6 +21,7 @@ white = (255,255,255)
 black = (0,0,0)
 n = Network()
 player_ID = int(n.getP())
+player_index = player_ID
 data = n.send("get")
 players, index = data[0], data[1]
 print("You are player",player_ID)
