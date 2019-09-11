@@ -33,7 +33,7 @@ IMAGES = [pygame.image.load("imgs\\turret.png"),pygame.image.load("imgs\\bullet.
           pygame.image.load("obstacles\water_open_bottom_right.png"),pygame.image.load("obstacles\water_open_bottom_left.png")
           ]
 
-POWERUP_IMGS = [pygame.image.load("imgs\medkit.png")]
+POWERUP_IMGS = [pygame.image.load("powerups\medkit.png")]
 
 
 class Tank():
@@ -114,7 +114,16 @@ class Tank():
                 rotated_image,rect = self.rotate(turret,angle,pivot,offset)
                 display.blit(rotated_image,rect)
                 image_s = image.get_size()
-                display.blit(image,(cen_x-(image_s[0]/2),cen_y-(image_s[1]/2)))            
+                display.blit(image,(cen_x-(image_s[0]/2),cen_y-(image_s[1]/2)))
+                pygame.draw.rect(display,(0,0,0),(cen_x-11,cen_y-30,22,5))
+                colour = ()
+                if self.health < 21:
+                    colour = (255,0,0)
+                elif self.health < 51:
+                    colour = (255,255,0)
+                else:
+                    colour = (255,255,0)
+                pygame.draw.rect(display,colour,(cen_x-10,cen_y-29,20,3))
             else:
                 pos = self.get_centered_pos(self.pos, player_tank)
                 pivot = [pos[0], pos[1]]
@@ -122,7 +131,15 @@ class Tank():
                 display.blit(rotated_image,rect)
                 image_s = image.get_size()
                 display.blit(image,(pos[0]-(image_s[0]/2),pos[1]-(image_s[1]/2)))
-                
+                pygame.draw.rect(display,(0,0,0),(pos[0]-11,pos[1]-30,22,5))
+                colour = ()
+                if self.health < 21:
+                    colour = (255,0,0)
+                elif self.health < 51:
+                    colour = (255,255,0)
+                else:
+                    colour = (255,255,0)
+                pygame.draw.rect(display,colour,(pos[0]-10,pos[1]-29,20,3))                
      
     def check_collision(self,players, barriers, powerups):
         for player in players:
