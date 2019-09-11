@@ -33,6 +33,8 @@ IMAGES = [pygame.image.load("imgs\\turret.png"),pygame.image.load("imgs\\bullet.
           pygame.image.load("obstacles\water_open_bottom_right.png"),pygame.image.load("obstacles\water_open_bottom_left.png")
           ]
 
+POWERUP_IMGS = [pygame.image.load("powerups\medkit.png")]
+
 
 class Tank():
 
@@ -122,7 +124,7 @@ class Tank():
                 display.blit(image,(pos[0]-(image_s[0]/2),pos[1]-(image_s[1]/2)))
                 
      
-    def check_collision(self,players, barriers):
+    def check_collision(self,players, barriers, powerups):
         for player in players:
             if not player.quit:
                 if player.ID != self.ID:
@@ -159,7 +161,6 @@ class Tank():
             xd = self.pos[0] - barrier.pos[0]
             yd = self.pos[1] - barrier.pos[1]
             if (xd > -200 and xd < 200) and (yd > -200 and yd < 200):
-                barrier_image = IMAGES[barrier.image_index]
                 player_image = IMAGES[self.turret_index]
                 player_s = player_image.get_size()
                 offset = (int((barrier.pos[0]) - (self.pos[0] - (player_s[0]/2))),int((barrier.pos[1]) - (self.pos[1] - (player_s[1]/2))))
@@ -168,6 +169,19 @@ class Tank():
                 collision = body.overlap(barrier_body,offset)
                 if collision:
                     return 3, collision
+
+        for powerup in powerups:
+            xd = self.pos[0] - powerup.pos[0]
+            yd = self.pos[1] - powerup.pos[1]
+            if (xd > -100 and xd < 100) and (yd > -100 and yd < 100):
+                player_image = IMAGES[self.turret_index]
+                player_s = player_image.get_size()
+                offset = (int((barrier.pos[0]) - (self.pos[0] - (player_s[0]/2))),int((barrier.pos[1]) - (self.pos[1] - (player_s[1]/2))))
+                body = self.get_mask()
+                powerup_body = powerup.get_mask()
+                collision = body.overlap(powerup_body,offset)
+                if collision:
+                    return 4, powerup.ID
         return 0,0
                 
 
@@ -268,3 +282,45 @@ class Barrier():
         pos = self.get_centered_pos(self.pos,tank)
         image = IMAGES[self.image_index]
         display.blit(image, pos)
+
+class Powerup():
+    def __init__(self,pos,ID):
+        self.pos = pos
+        self.ID = ID
+        self.image_index = ID - 1
+
+    def get_mask(self):
+        image = POWERUP_IMGS[self.image_index]
+        return pygame.mask.from_surface(image)
+
+    def get_centered_pos(self, pos, tank):
+        pos = (pos[0]- tank.pos[0]+self.cen_x,pos[1] - tank.pos[1]+self.cen_y)
+        return (int(pos[0]),int(pos[1]))
+
+    def display_powerup(self,display,tank):
+        display_size = pygame.display.get_surface().get_size()
+        self.cen_x = int(display_size[0]/2)
+        self.cen_y = int(display_size[1]/2)
+        pos = self.get_centered_pos(self.pos,tank)
+        image = POWERUP_IMGS[self.image_index]
+        display.blit(image, pos)
+
+    def check_collision(self,players):
+        for player in players:
+            if not player.quit:
+                if player.ID != self.ID:
+                    xd = self.pos[0] - player.pos[0]
+                    yd = self.pos[1] - player.pos[1]
+                    if (xd > -100 and xd < 100) and (yd > -100 and yd < 100):
+                        player_image = IMAGES[player.turret_index]
+                        player_s = player_image.get_size()
+                        offset = (int((player.pos[0] - (player_s[0]/2)) - self.pos[0]),int((player.pos[1] - (player_s[1]/2)) - self.pos[1]))
+                        body = self.get_mask()
+                        player_body = player.get_mask()
+                        collision = body.overlap(player_body,offset)
+                        if collision:
+                            return True
+
+
+
+        
