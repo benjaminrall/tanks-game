@@ -26,7 +26,7 @@ data = n.send("get")
 players, index = data[0], data[1]
 print("You are player",player_ID)
 
-levels = [json.load(open("maps\level_1","r"))]
+levels = [json.load(open("maps\level_1","r")),json.load(open("maps\level_2","r"))]
 
 tiles = [pygame.image.load("tiles\dirt_1.png"),pygame.image.load("tiles\grass_1.png"),
          pygame.image.load("tiles\cross_junction.png"),pygame.image.load("tiles\dirt_border_square_bottom_left.png"),
@@ -61,7 +61,7 @@ def get_centered_pos(pos, tank):
     pos = (pos[0]- tank.pos[0]+(win_width/2),pos[1] - tank.pos[1]+(win_height/2))
     return (int(pos[0]),int(pos[1]))
 
-obstacle_maps = [json.load(open("maps\obstacle_map_1","r"))]
+obstacle_maps = [json.load(open("maps\obstacle_map_1","r")),json.load(open("maps\obstacle_map_2","r"))]
 
 
 tiles_indexes = []
