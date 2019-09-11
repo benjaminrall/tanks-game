@@ -97,58 +97,69 @@ images =(
 (12, stonewall_t_t_r,"stonewall turn top right"),
 (13, stonewall_v,"stonewall vertical"),
 (14, stonewall_h,"stonewall horizontal"),
-(13, stonewall_v_d,"stonewall vertical door"),
-(14, stonewall_h_d,"stonewall horizontal door"),
-(15, tree_1,"tree 1"),
-(16, water,"water"),
-(17, water_box,"water box"),
-(18, water_d,"water down"),
-(19, water_u,"water up"),
-(20, water_l,"water left"),
-(21, water_r,"water right"),
-(22, water_o_d,"water open down"),
-(23, water_o_u,"water open up"),
-(24, water_o_l,"water open left"),
-(25, water_o_r,"water open right"),
-(26, water_e_d,"water end down"),
-(27, water_e_u,"water end up"),
-(28, water_e_l,"water end left"),
-(29, water_e_r,"water end right"),
-(30, water_c,"water cross"),
-(31, water_v,"water vertical"),
-(32, water_h,"water horizontal"),
-(33, water_o_d_l,"water open down left"),
-(34, water_o_l_d,"water open left down"),
-(35, water_o_d_r,"water open down right"),
-(36, water_o_r_d,"water open right down"),
-(37, water_o_u_l,"water open up left"),
-(38, water_o_l_u,"water open left up"),
-(39, water_o_u_r,"water open up right"),
-(40, water_o_r_u,"water open right up"),
-(41, water_t_t_r,"water turn top right"),
-(42, water_t_t_l,"water turn top left"),
-(43, water_t_b_r,"water turn bottom right"),
-(44, water_t_b_l,"water turn bottom left"),
-(41, water_t_o_t_r,"water turn open top right"),
-(42, water_t_o_t_l,"water turn open top left"),
-(43, water_t_o_b_r,"water turn open bottom right"),
-(44, water_t_o_b_l,"water turn open bottom left"),
-(45, water_t_junction_u,"water t-junction up"),
-(46, water_t_junction_d,"water t-junction down"),
-(47, water_t_junction_l,"water t-junction left"),
-(48, water_t_junction_r,"water t-junction right"),
-(49, water_o_t_r,"water open top right"),
-(50, water_o_t_l,"water open top left"),
-(51, water_o_b_r,"water open bottom right"),
-(52, water_o_b_l,"water open bottom left"),
+(15, stonewall_v_d,"stonewall vertical door"),
+(16, stonewall_h_d,"stonewall horizontal door"),
+(17, tree_1,"tree 1"),
+(18, water,"water"),
+(19, water_box,"water box"),
+(20, water_d,"water down"),
+(21, water_u,"water up"),
+(22, water_l,"water left"),
+(23, water_r,"water right"),
+(24, water_o_d,"water open down"),
+(25, water_o_u,"water open up"),
+(26, water_o_l,"water open left"),
+(27, water_o_r,"water open right"),
+(28, water_e_d,"water end down"),
+(29, water_e_u,"water end up"),
+(30, water_e_l,"water end left"),
+(31, water_e_r,"water end right"),
+(32, water_c,"water cross"),
+(33, water_v,"water vertical"),
+(34, water_h,"water horizontal"),
+(35, water_o_d_l,"water open down left"),
+(36, water_o_l_d,"water open left down"),
+(37, water_o_d_r,"water open down right"),
+(38, water_o_r_d,"water open right down"),
+(39, water_o_u_l,"water open up left"),
+(40, water_o_l_u,"water open left up"),
+(41, water_o_u_r,"water open up right"),
+(42, water_o_r_u,"water open right up"),
+(43, water_t_t_r,"water turn top right"),
+(44, water_t_t_l,"water turn top left"),
+(45, water_t_b_r,"water turn bottom right"),
+(46, water_t_b_l,"water turn bottom left"),
+(47, water_t_o_t_r,"water turn open top right"),
+(48, water_t_o_t_l,"water turn open top left"),
+(49, water_t_o_b_r,"water turn open bottom right"),
+(50, water_t_o_b_l,"water turn open bottom left"),
+(51, water_t_junction_u,"water t-junction up"),
+(52, water_t_junction_d,"water t-junction down"),
+(53, water_t_junction_l,"water t-junction left"),
+(54, water_t_junction_r,"water t-junction right"),
+(55, water_o_t_r,"water open top right"),
+(56, water_o_t_l,"water open top left"),
+(57, water_o_b_r,"water open bottom right"),
+(58, water_o_b_l,"water open bottom left"),
 )
 
 block_grid = []
 clock = pygame.time.Clock()
-for x in range(25):
-    block_grid.append([])
-    for y in range(25):
-        block_grid[x].append(Block((x*21,y*21)))
+try:
+    with open("obstacle_map_save","r") as f:
+        data = json.load(f)
+        print(data)
+    for x in range(25):
+        block_grid.append([])
+        for y in range(25):
+            block_grid[x].append(Block((x*21,y*21),data[x][y]))
+
+except:
+
+    for x in range(25):
+        block_grid.append([])
+        for y in range(25):
+            block_grid[x].append(Block((x*21,y*21)))
 
 display = pygame.display.set_mode((524,524))
 pygame.display.set_caption("Obstacle Editor")

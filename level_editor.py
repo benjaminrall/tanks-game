@@ -112,10 +112,21 @@ images =(
 
 block_grid = []
 clock = pygame.time.Clock()
-for x in range(25):
-    block_grid.append([])
-    for y in range(25):
-        block_grid[x].append(Block((x*21,y*21)))
+try:
+    with open("level_save","r") as f:
+        data = json.load(f)
+        print(data)
+    for x in range(25):
+        block_grid.append([])
+        for y in range(25):
+            block_grid[x].append(Block((x*21,y*21),data[x][y]))
+
+except:
+
+    for x in range(25):
+        block_grid.append([])
+        for y in range(25):
+            block_grid[x].append(Block((x*21,y*21)))
 
 display = pygame.display.set_mode((524,524))
 pygame.display.set_caption("Level Editor")
