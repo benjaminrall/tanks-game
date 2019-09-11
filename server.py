@@ -15,7 +15,7 @@ except socket.error as e:
 s.listen()
 print("Waiting for a connection...")
 
-spawnpoint_maps = [json.load(open("maps\obstacle_map_1","r"))]
+spawnpoint_maps = [json.load(open("maps\obstacle_map_1","r")),json.load(open("maps\obstacle_map_2","r"))]
 connected = set()
 startingpos = []
 tanks = []
