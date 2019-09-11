@@ -3,7 +3,36 @@ pygame.init()
 
 IMAGES = [pygame.image.load("imgs\\turret.png"),pygame.image.load("imgs\\bullet.png"),
           pygame.image.load("imgs\gun.png"),pygame.image.load("obstacles\\boulder_1.png"),
+          pygame.image.load("obstacles\\boulder_2.png"),pygame.image.load("obstacles\stonewall_end_down.png"),
+          pygame.image.load("obstacles\stonewall_end_up.png"),pygame.image.load("obstacles\stonewall_end_left.png"),
+          pygame.image.load("obstacles\stonewall_end_right.png"),pygame.image.load("obstacles\stonewall_turn_bottom_left.png"),
+          pygame.image.load("obstacles\stonewall_turn_bottom_right.png"),pygame.image.load("obstacles\stonewall_turn_top_left.png"),
+          pygame.image.load("obstacles\stonewall_turn_top_right.png"),pygame.image.load("obstacles\stonewall_vertical.png"),
+          pygame.image.load("obstacles\stonewall_horizontal.png"),pygame.image.load("obstacles\stonewall_vertical_door.png"),
+          pygame.image.load("obstacles\stonewall_horizontal_door.png"),pygame.image.load("obstacles\\tree_1.png"),
+          pygame.image.load("obstacles\water.png"),pygame.image.load("obstacles\water_box.png"),
+          pygame.image.load("obstacles\water_down.png"),pygame.image.load("obstacles\water_up.png"),
+          pygame.image.load("obstacles\water_left.png"),pygame.image.load("obstacles\water_right.png"),
+          pygame.image.load("obstacles\water_open_down.png"),pygame.image.load("obstacles\water_open_up.png"),
+          pygame.image.load("obstacles\water_open_left.png"),pygame.image.load("obstacles\water_open_right.png"),
+          pygame.image.load("obstacles\water_end_down.png"),pygame.image.load("obstacles\water_end_up.png"),
+          pygame.image.load("obstacles\water_end_left.png"),pygame.image.load("obstacles\water_end_right.png"),
+          pygame.image.load("obstacles\water_four_way.png"),pygame.image.load("obstacles\water_vertical.png"),
+          pygame.image.load("obstacles\water_horizontal.png"),
+          pygame.image.load("obstacles\water_open_dl.png"),pygame.image.load("obstacles\water_open_ld.png"),
+          pygame.image.load("obstacles\water_open_dr.png"),pygame.image.load("obstacles\water_open_rd.png"),
+          pygame.image.load("obstacles\water_open_ul.png"),pygame.image.load("obstacles\water_open_lu.png"),
+          pygame.image.load("obstacles\water_open_ur.png"),pygame.image.load("obstacles\water_open_ru.png"),
+          pygame.image.load("obstacles\water_turn_top_right.png"),pygame.image.load("obstacles\water_turn_top_left.png"),
+          pygame.image.load("obstacles\water_turn_bottom_right.png"),pygame.image.load("obstacles\water_turn_bottom_left.png"),
+          pygame.image.load("obstacles\water_turn_open_top_right.png"),pygame.image.load("obstacles\water_turn_open_top_left.png"),
+          pygame.image.load("obstacles\water_turn_open_bottom_right.png"),pygame.image.load("obstacles\water_turn_open_bottom_left.png"),
+          pygame.image.load("obstacles\water_t_junction_up.png"),pygame.image.load("obstacles\water_t_junction_down.png"),
+          pygame.image.load("obstacles\water_t_junction_left.png"),pygame.image.load("obstacles\water_t_junction_right.png"),
+          pygame.image.load("obstacles\water_open_top_right.png"),pygame.image.load("obstacles\water_open_top_left.png"),
+          pygame.image.load("obstacles\water_open_bottom_right.png"),pygame.image.load("obstacles\water_open_bottom_left.png")
           ]
+
 
 class Tank():
 
