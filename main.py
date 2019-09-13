@@ -12,6 +12,8 @@ border = pygame.image.load("imgs\\border.png")
 clock = pygame.time.Clock()
 green = (0,255,0)
 red = (255,0,0)
+update_speed = 1
+last_update = -1 - update_speed
 blue = (0,0,255)
 white = (255,255,255)
 black = (0,0,0)
@@ -129,12 +131,24 @@ while playing:
     while run:
         if len(players) != players_len:
             player_index = get_index(players, player_ID)
-        data = n.send(players[player_index])
+        to_send = (players[player_index].pos,players[player_index].projectiles,
+                   players[player_index].kills,players[player_index].deaths,
+                   players[player_index].score,players[player_index].immune,
+                   players[player_index].health,players[player_index].direction,
+                   players[player_index].xv,players[player_index].yv,
+                   players[player_index].xa,players[player_index].ya,
+                   players[player_index].dead)
+        if last_update + update_speed < frames:
+            data = n.send(to_send)
+            last_update = frames
+            print(last_update, frames)
         if data[0] == "go":
             run = False
             break
         players = data[0]
         powerup = data[1]
+        if len(players) != players_len:
+            player_index = get_index(players, player_ID)
         display.blit(border,get_centered_pos((-400,-400),players[player_index]))
         display.blit(bg_img,get_centered_pos((0,0),players[player_index]))
         if powerup[1] != 0:
@@ -145,16 +159,12 @@ while playing:
             if valid:
                 active_powerups.append(Powerup(powerup[0],powerup[1]))
         for barrier in barriers:
-            while True:
-                try:
-                    barrier.display_barrier(display, players[player_index])
-                    break
-                except:
-                    player_index = get_index(players, player_ID)
+            barrier.display_barrier(display, players[player_index])
+        for powerup in active_powerups:
+            powerup.display_powerup(display, players[player_index])
         players_len = len(players)
         for player in players:
-            for powerup in active_powerups:
-                powerup.display_powerup(display, players[player_index])
+            
             for projectile in player.projectiles:
                 projectile.print_projectile(display, players[player_index])
             player.display_tank(display, players[player_index])
@@ -358,7 +368,6 @@ while playing:
         display_message(text,(77,340),font,white,display)
 
         for i in range(len(scores)):
-            print(scores[i][1])
             if scores[i][1] == player_ID:
                 data = scores[i]
                 display_message(str(i + 1), (77,i*40 + 140), font, white, display)

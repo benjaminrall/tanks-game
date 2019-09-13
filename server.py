@@ -2,7 +2,7 @@ import socket, pickle, time, pygame, random, json
 from _thread import *
 from classes import Tank
 
-server = "9.174.20.107"
+server = "9.174.30.43"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,7 +46,7 @@ powerup = [(0,0),0]
 IDs = [1,2,3,4]
 random.shuffle(IDs)
 tanks = []
-game_duration = 1
+game_duration = 300
 
 def get_index(tanks, ID):
     for i in range(len(tanks)):
@@ -79,7 +79,20 @@ def threaded_client(conn, p_ID):
                             if len(tanks) != tanks_len:
                                 p_i = get_index(tanks, p_ID)
                             tanks_len = len(tanks)
-                            tanks[p_i] = data
+
+                            tanks[p_i].pos = data[0]
+                            tanks[p_i].projectiles = data[1]
+                            tanks[p_i].kills = data[2]
+                            tanks[p_i].deaths = data[3]
+                            tanks[p_i].score = data[4]
+                            tanks[p_i].immune = data[5]
+                            tanks[p_i].health = data[6]
+                            tanks[p_i].direction = data[7]
+                            tanks[p_i].xv = data[8]
+                            tanks[p_i].yv = data[9]
+                            tanks[p_i].xa = data[10]
+                            tanks[p_i].ya = data[11]
+                            tanks[p_i].dead = data[12]
                             for i in range(len(tanks)):
                                 if tanks[i].dead:
                                     random.shuffle(startingpos)
