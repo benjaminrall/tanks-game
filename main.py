@@ -2,6 +2,13 @@ from network import Network
 from classes import *
 import random, socket, time, pygame, math, json
 
+ip_address = "192.168.20.43"
+name = ""
+
+defaults = False
+if not defaults:
+    name = input("Enter your name\n> ")
+    ip_address = input("Enter the IP address of the server\n> ")
 
 win_width = 800
 win_height = 800
@@ -15,7 +22,7 @@ red = (255,0,0)
 blue = (0,0,255)
 white = (255,255,255)
 black = (0,0,0)
-update_speed = 2
+update_speed = 0
 font = pygame.font.Font("imgs\clab.otf",25)
 
 levels = [json.load(open("maps\level_1","r")),json.load(open("maps\level_2","r"))]
@@ -64,12 +71,7 @@ def display_message(text, pos, font, colour,display):
     surface = font.render(text,True,colour)
     display.blit(surface,pos)
 
-
-in_menu = True
-while in_menu:
-    break
-
-n = Network()
+n = Network(ip_address)
 playing = True
 while playing:
     slip = 0.5
@@ -94,7 +96,7 @@ while playing:
     proj_damage = 10
     player_ID = int(n.getP())
     player_index = player_ID
-    data = n.send("get")
+    data = n.send(("get",name))
     players, index = data[0], data[1]
     active_powerups = []
     print("You are player",player_ID)
