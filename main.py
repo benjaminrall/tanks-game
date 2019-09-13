@@ -394,14 +394,11 @@ while playing:
                 
                     mouse_pos = pygame.mouse.get_pos()
                     if mouse_pos[1] > 520 and mouse_pos[1] < 570:
-                        print("y")
                         if mouse_pos[0] > 67 and mouse_pos[0] < 164:
-                            print("qx")
                             can_continue = n.send("q")
                             pygame.quit()
                             quit()
                         if mouse_pos[0] > 535 and mouse_pos[0] < 700:
-                            print("cx")
                             reply = "c"
                 
         can_continue = n.send(reply)
