@@ -78,6 +78,12 @@ class Tank():
         rect = rotated_image.get_rect(center = pivot+rotated_offset)
         return rotated_image, rect
 
+    def display_message(self,text,font_size,pos,display):
+        surface = pygame.font.Font("imgs\clab.otf",font_size).render(text,True,(255,255,255))
+        s_h = surface.get_height()
+        s_w = surface.get_width()
+        display.blit(surface,(pos[0]-(s_w/2),pos[1]-(s_h/2)))        
+
     def get_angle(self):
         mouse = pygame.mouse.get_pos()
         x_dif = mouse[0] - self.cen_x
@@ -130,6 +136,8 @@ class Tank():
                 else:
                     colour = (0,255,0)
                 pygame.draw.rect(display,colour,(cen_x-10,cen_y-29,self.health/5,3))
+                self.display_message(self.name,14,(cen_x,cen_y-40),display)
+                self.display_message("Kills: "+str(self.kills),20,(cen_x,30),display)
             else:
                 pos = self.get_centered_pos(self.pos, player_tank)
                 pivot = [pos[0], pos[1]]
@@ -146,7 +154,8 @@ class Tank():
                 else:
                     colour = (0,255,0)
                 pygame.draw.rect(display,colour,(pos[0]-10,pos[1]-29,self.health/5,3))                
-     
+                self.display_message(self.name,14,(pos[0],pos[1]-40),display)
+                
     def check_collision(self,players, barriers, powerups):
         for player in players:
             if not player.quit:
