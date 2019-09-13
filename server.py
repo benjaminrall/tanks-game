@@ -49,7 +49,7 @@ powerup = [(0,0),0]
 IDs = [1,2,3,4]
 random.shuffle(IDs)
 tanks = []
-game_duration = 300
+game_duration = 10
 continue_list = []
 replied = 0
 
@@ -75,7 +75,7 @@ def threaded_client(conn, p_ID):
                     if not data:
                         break
                     else:
-                        if data != "get":
+                        if data[0] != "get":
                             if (spawn_timer + 20) < time.time():
                                 random.shuffle(powerup_spawns)
                                 random.shuffle(IDs)
@@ -107,6 +107,7 @@ def threaded_client(conn, p_ID):
                                     tanks[i].immune = True
                             reply = (tanks, powerup)
                         else:
+                            tanks.append(Tank(p_ID,startingpos[0],name=data[1]))
                             reply = (tanks, index)
                         conn.sendall(pickle.dumps(reply))
                 else:
@@ -212,5 +213,4 @@ while True:
         conn, addr = s.accept()
         print("Connected to:",addr)
         random.shuffle(startingpos)
-        tanks.append(Tank(p_ID,startingpos[0]))
         start_new_thread(threaded_client, (conn, p_ID))
