@@ -49,7 +49,7 @@ powerup = [(0,0),0]
 IDs = [1,2,3,4]
 random.shuffle(IDs)
 tanks = []
-game_duration = 10
+game_duration = 300
 continue_list = []
 replied = 0
 
