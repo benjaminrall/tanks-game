@@ -168,7 +168,7 @@ def threaded_client(conn, p_ID):
         tanks_len = len(tanks)
         while replied < tanks_len:
             try:
-                data = pickle.loads(conn.recv(8192*4))
+                data = pickle.loads(conn.recv(8192*2))
                 if not data:
                     break
                 else:
