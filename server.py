@@ -2,7 +2,10 @@ import socket, pickle, time, pygame, random, json
 from _thread import *
 from classes import Tank
 
-server = "9.174.30.43"
+host = socket.gethostname()
+ip = socket.gethostbyname(host)
+print("ip: " + ip)
+server = ip
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
