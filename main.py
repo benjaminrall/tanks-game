@@ -128,7 +128,6 @@ while playing:
     last_shot = time.time()
     mouse_down = False
     previous_pos = (64,64)
-    print(players)
     while run:
         if len(players) != players_len:
             player_index = get_index(players, player_ID)
@@ -142,7 +141,6 @@ while playing:
         if last_update + update_speed < frames:
             data = n.send(to_send)
             last_update = frames
-            print(last_update, frames)
         if data[0] == "go":
             run = False
             break
