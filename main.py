@@ -126,6 +126,7 @@ while playing:
     last_shot = time.time()
     mouse_down = False
     previous_pos = (64,64)
+    print(players)
     while run:
         if len(players) != players_len:
             player_index = get_index(players, player_ID)
@@ -327,14 +328,11 @@ while playing:
         frames += 1
         clock.tick(60)
 
+    can_continue = False
+    reply = "0"
     end_menu = True
     while end_menu:
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                n.send("q")
-                pygame.quit()
-                quit()
         scores = []
         for player in players:
             scores.append([player.score,player.ID,player.name,player.deaths,player.kills])
@@ -344,7 +342,7 @@ while playing:
         for i in range(min(len(scores),5)):
             data = scores[i]
             if data[3] != 0:
-                kd = str(data[4]/data[3])
+                kd = str(round(data[4]/data[3],1))
             else:
                 kd = str(data[4])
             display_message(str(i + 1), (77,i*40 + 140), font, white, display)
@@ -356,17 +354,51 @@ while playing:
 
         text = "YOU:"
         display_message(text,(77,340),font,white,display)
-
+        
         for i in range(len(scores)):
-            print(scores[i][1])
+            
             if scores[i][1] == player_ID:
                 data = scores[i]
-                display_message(str(i + 1), (77,i*40 + 140), font, white, display)
-                display_message(data[2], (184,i*40 + 140), font, white, display)
-                display_message(str(data[4]), (325,i*40 + 140), font, white, display)
-                display_message(str(data[3]), (417,i*40 + 140), font, white, display)
-                display_message(kd, (546,i*40 + 140), font, white, display)
-                display_message(str(data[0]), (617,i*40 + 140), font, white, display)
+                if data[3] != 0:
+                    kd = str(round(data[4]/data[3],1))
+                else:
+                    kd = str(data[4])
+                display_message(str(i + 1), (77,380), font, white, display)
+                display_message(data[2], (184,380), font, white, display)
+                display_message(str(data[4]), (325,380), font, white, display)
+                display_message(str(data[3]), (417,380), font, white, display)
+                display_message(kd, (546, + 380), font, white, display)
+                display_message(str(data[0]), (617,380), font, white, display)
+
+        quit_button = pygame.draw.rect(display,(255,0,0),(67,520,97,50))
+        display_message("QUIT",(82,535),font,black,display)
+        contine_button = pygame.draw.rect(display,(0,255,0),(535,520,165,50))
+        display_message("CONTINUE",(547,535),font,black,display)
+
+        reply = "0"
+        if reply == "0":
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    can_continue = n.send("q")
+                    pygame.quit()
+                    quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
                 
+                    mouse_pos = pygame.mouse.get_pos()
+                    if mouse_pos[1] > 520 and mouse_pos[1] < 570:
+                        print("y")
+                        if mouse_pos[0] > 67 and mouse_pos[0] < 164:
+                            print("qx")
+                            can_continue = n.send("q")
+                            pygame.quit()
+                            quit()
+                        if mouse_pos[0] > 535 and mouse_pos[0] < 700:
+                            print("cx")
+                            reply = "c"
+                
+        can_continue = n.send(reply)
+        
         pygame.display.update()
         clock.tick(60)
+        if can_continue:
+            break
