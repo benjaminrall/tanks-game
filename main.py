@@ -15,6 +15,7 @@ red = (255,0,0)
 blue = (0,0,255)
 white = (255,255,255)
 black = (0,0,0)
+font = pygame.font.Font("imgs\clab.otf",25)
 
 levels = [json.load(open("maps\level_1","r")),json.load(open("maps\level_2","r"))]
 
@@ -58,10 +59,14 @@ def get_index(tanks, ID):
         if tanks[i].ID == ID:
             return i
 
+def display_message(text, pos, font, colour,display):
+    surface = font.render(text,True,colour)
+    display.blit(surface,pos)
+
+
 in_menu = True
 while in_menu:
     break
-
 
 n = Network()
 playing = True
@@ -120,18 +125,18 @@ while playing:
     players_len = 0
     last_shot = time.time()
     mouse_down = False
-    previous_pos = (0,0)
+    previous_pos = (64,64)
     while run:
         if len(players) != players_len:
             player_index = get_index(players, player_ID)
-        display.blit(border,get_centered_pos((-400,-400),players[player_index]))
-        display.blit(bg_img,get_centered_pos((0,0),players[player_index]))
         data = n.send(players[player_index])
         if data[0] == "go":
             run = False
             break
         players = data[0]
         powerup = data[1]
+        display.blit(border,get_centered_pos((-400,-400),players[player_index]))
+        display.blit(bg_img,get_centered_pos((0,0),players[player_index]))
         if powerup[1] != 0:
             valid = True
             for active_powerup in active_powerups:
@@ -321,4 +326,47 @@ while playing:
         pygame.display.update()
         frames += 1
         clock.tick(60)
-    
+
+    end_menu = True
+    while end_menu:
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                n.send("q")
+                pygame.quit()
+                quit()
+        scores = []
+        for player in players:
+            scores.append([player.score,player.ID,player.name,player.deaths,player.kills])
+        scores = sorted(scores,reverse = True,key=lambda x:x[0])
+        text = ("%-10s%-15s%-9s%-10s%-7s%-9s"%("RANK","NAME","KILLS","DEATHS","K/D","SCORE"))
+        display_message(text, (75,100), font, white, display)
+        for i in range(min(len(scores),5)):
+            data = scores[i]
+            if data[3] != 0:
+                kd = str(data[4]/data[3])
+            else:
+                kd = str(data[4])
+            display_message(str(i + 1), (77,i*40 + 140), font, white, display)
+            display_message(data[2], (184,i*40 + 140), font, white, display)
+            display_message(str(data[4]), (325,i*40 + 140), font, white, display)
+            display_message(str(data[3]), (417,i*40 + 140), font, white, display)
+            display_message(kd, (546,i*40 + 140), font, white, display)
+            display_message(str(data[0]), (617,i*40 + 140), font, white, display)
+
+        text = "YOU:"
+        display_message(text,(77,340),font,white,display)
+
+        for i in range(len(scores)):
+            print(scores[i][1])
+            if scores[i][1] == player_ID:
+                data = scores[i]
+                display_message(str(i + 1), (77,i*40 + 140), font, white, display)
+                display_message(data[2], (184,i*40 + 140), font, white, display)
+                display_message(str(data[4]), (325,i*40 + 140), font, white, display)
+                display_message(str(data[3]), (417,i*40 + 140), font, white, display)
+                display_message(kd, (546,i*40 + 140), font, white, display)
+                display_message(str(data[0]), (617,i*40 + 140), font, white, display)
+                
+        pygame.display.update()
+        clock.tick(60)

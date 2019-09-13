@@ -46,7 +46,7 @@ powerup = [(0,0),0]
 IDs = [1,2,3,4]
 random.shuffle(IDs)
 tanks = []
-game_duration = 10
+game_duration = 1
 
 def get_index(tanks, ID):
     for i in range(len(tanks)):

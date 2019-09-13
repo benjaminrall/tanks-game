@@ -45,7 +45,7 @@ class Tank():
         self.name = name
         self.image = 0
         if self.name == '':
-            self.name = "Player",(self.ID+1)
+            self.name = "Player" + str(self.ID+1)
         self.pos = pos
         self.xv = xv
         self.yv = yv
