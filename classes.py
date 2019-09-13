@@ -276,7 +276,8 @@ class Projectile():
                                 index = self.get_index(players,self.ID)
                                 players[index].score += 5
                                 if player.health - (self.damage/player.defence) <= 0:
-                                    players[index].score += 20                           
+                                    players[index].score += 20
+                                    players[index].kills += 1
                             return True
 
         for barrier in barriers:

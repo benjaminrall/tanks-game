@@ -47,6 +47,8 @@ IDs = [1,2,3,4]
 random.shuffle(IDs)
 tanks = []
 game_duration = 300
+continue_list = []
+replied = 0
 
 def get_index(tanks, ID):
     for i in range(len(tanks)):
@@ -54,7 +56,7 @@ def get_index(tanks, ID):
             return i
 
 def threaded_client(conn, p_ID):
-    global tanks, index, spawn_timer, powerup, next_index, game_duration, startingpos, powerup_spawns, IDs, game_timer
+    global tanks, index, spawn_timer, replied, continue_list, powerup, next_index, game_duration, startingpos, powerup_spawns, IDs, game_timer
     conn.send(str.encode(str(p_ID)))
     p_i = get_index(tanks, p_ID)
     reply = ""
@@ -79,7 +81,6 @@ def threaded_client(conn, p_ID):
                             if len(tanks) != tanks_len:
                                 p_i = get_index(tanks, p_ID)
                             tanks_len = len(tanks)
-
                             tanks[p_i].pos = data[0]
                             tanks[p_i].projectiles = data[1]
                             tanks[p_i].kills = data[2]
@@ -123,9 +124,24 @@ def threaded_client(conn, p_ID):
             print("Lost connection")
             conn.close()
             return
-        data = pickle.loads(conn.recv(8192*4))
-        reply = ("go",0)
-        conn.sendall(pickle.dumps(reply))
+        try:
+            data = pickle.loads(conn.recv(8192*4))
+            reply = ("go",0)
+            conn.sendall(pickle.dumps(reply))
+        except:
+
+            p_i = get_index(tanks, p_ID)
+            try:
+                tanks[p_i].quit = True
+                for i in range(len(tanks[p_i].projectiles)):
+                    del tanks[p_i].projectiles[0]
+                del tanks[p_i]
+                print("player",p_ID,"left")
+            except:
+                pass
+            print("Lost connection")
+            conn.close()
+            return
         p_i = get_index(tanks, p_ID)
         reset_values()
         for i in range(len(tanks)):
@@ -135,7 +151,56 @@ def threaded_client(conn, p_ID):
             tanks[i].health = 100
             tanks[i].spawn_time=time.time()
             tanks[i].immune = True
-
+            tanks[i].kills = 0
+            tanks[i].deaths = 0
+            tanks[i].score = 0
+            tanks[i].xv = 0
+            tanks[i].yv = 0
+            tanks[i].xa = 0
+            tanks[i].ya = 0
+        continue_list = []
+        checking = True
+        replied = 0
+        tanks_len = len(tanks)
+        while replied < tanks_len:
+            try:
+                data = pickle.loads(conn.recv(8192*4))
+                if not data:
+                    break
+                else:
+                    p_i = get_index(tanks, p_ID)
+                    if data == "c":
+                        if tanks[p_i] not in continue_list:
+                            continue_list.append(tanks[p_i])
+                            replied += 1
+                    elif data == "q":
+                        if tanks[p_i] not in continue_list:
+                            replied += 1
+                    if replied >= tanks_len:
+                        reply = True
+                    else:
+                        reply = False
+                    conn.sendall(pickle.dumps(reply))
+            except:
+                break
+        if not reply:
+            try:
+                tanks[p_i].quit = True
+                for i in range(len(tanks[p_i].projectiles)):
+                    del tanks[p_i].projectiles[0]
+                del tanks[p_i]
+                print("player",p_ID,"left")
+            except:
+                pass
+            print("Lost connection")
+            playing = False
+            conn.close()
+            return
+        tanks = []
+        for tank in continue_list:
+            tanks.append(tank)
+        p_i = get_index(tanks, p_ID)
+            
 p_ID = -1
 print("new game")
 while True:
