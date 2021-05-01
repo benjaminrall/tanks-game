@@ -2,6 +2,8 @@ from network import Network
 from classes import *
 import random, socket, time, pygame, math, json
 
+pygame.font.init()
+
 ip_address = "192.168.20.43"
 name = ""
 

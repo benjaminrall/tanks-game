@@ -1,4 +1,4 @@
-import socket, pickle, time, pygame, random, json
+import socket, pickle, time, random, json
 from _thread import *
 from classes import Tank
 
