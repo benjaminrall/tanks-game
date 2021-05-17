@@ -1,6 +1,5 @@
 import socket
 import pickle
-import random
 
 class Network():
     
