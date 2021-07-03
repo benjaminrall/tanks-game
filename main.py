@@ -4,7 +4,7 @@ import random, socket, time, pygame, math, json
 
 pygame.font.init()
 
-ip_address = "192.168.20.43"
+ip_address = ""
 name = ""
 
 defaults = False
